@@ -32,26 +32,37 @@ description: 企业团餐与部门聚餐的统筹助手。当用户提到「部�
 
 ### 第二步：拉真实数据（不要凭记忆报价）
 
-按这个顺序调用麦当劳 MCP，前一步失败就按「降级策略」降级，不要跳过：
+按这个顺序调用麦当劳 MCP。**以下参数写法均为实测确认，照抄即可，不要按官方文档的写法改**：
 
-1. `now-time-info` —— 拿到当前时间，用于判断活动日历与场次是否还有效
-2. `query-nearby-stores` 或 `delivery-query-stores` —— 确认地址附近有可下单门店
-3. `query-meals` —— 拉当前门店在售餐品与编码。**这是唯一可信的价格与供应来源**
-4. `list-nutrition-foods` —— 拉热量与营养，用于输出人均热量参考
+1. `now-time-info` —— 拿到服务器时间，判断活动日历与预约场次是否还有效
+2. `query-nearby-stores`，参数 `{"beType":1,"searchType":2,"city":"杭州","keyword":"杭州"}` —— **`city` 和 `keyword` 必须同时传**，只传一个会报 `600058`
+3. `query-meals`，参数 `{"storeCode":"...","orderType":1,"beType":1}` —— **名称和价格在 `data.meals` 这个字典里**（键是商品编码），`data.categories` 里只有编码和标签。价格字段是 `currentPrice`，字符串，单位元
+4. `list-nutrition-foods` —— 返回的 `data` 是**字符串**（类 CSV），要先 `replace("\\n","\n")` 再按行切；按 `productName` 中文名匹配，匹配不上按 0 计
 5. `query-store-coupons` / `available-coupons` —— 查可用优惠券，团餐金额大，券能省不少
-6. `calculate-price` —— 用真实餐品编码 + 优惠券重算总价。**以这个结果为准，不要用本地算的价**
+6. `calculate-price`，参数 `items` 里字段名是 **`productCode`**（不是 `code`）—— 写错不会报错，只会静默返回 `price: 0`。**返回金额单位是分**，2550 表示 ¥25.50
 
-若场合是团建或派对，追加：
+若场合是企业团餐或派对，追加：
 
-7. `query-party-city` → `query-party-store` → `query-partystore-date` → `query-partystore-session` —— 逐级缩小到具体场次
-8. `query-meal-assistance` —— 确认门店是否支持团餐助餐服务
+7. `query-promotions`，参数 `{"beType":6,"orderType":2,...}` —— 查企业团餐满减/满折规则。**这个工具官方文档里没写，但团餐场景价值很高**
+8. `query-party-city` → `query-party-store` → `query-party-store-date` → `query-party-store-session` —— 注意工具名中间有连字符，**是 `party-store` 不是 `partystore`**
+9. `query-meal-assistance` —— 确认门店是否支持团餐助餐服务，`beType` 固定传 6
+
+> 企业团餐是独立业务类型：`beType=6`、`orderType=2`（外送）。查团餐门店要用 `delivery-query-stores`，`query-nearby-stores` 只支持到店（1）和得来速（5）。
 
 ### 第三步：跑方案引擎
 
-把 `query-meals` 返回的餐品整理成 `assets/sample_menu.json` 的结构（name / category / price / calories / tags / sku），写到临时文件，然后执行：
+先用 `fetch_menu.py` 把真实菜单转成引擎格式（这一步联网，需要 `MCD_TOKEN`），再跑方案：
 
 ```bash
-python scripts/catering_planner.py --people 50 --budget 1500 --occasion "部门聚餐" --city "杭州" --split company --menu /tmp/menu.json
+export MCD_TOKEN=你的Token
+python scripts/fetch_menu.py --city 杭州 --keyword 杭州 --out assets/real_menu.json
+python scripts/catering_planner.py --people 30 --budget 1200 --occasion "部门聚餐" --city "杭州" --split company --menu assets/real_menu.json
+```
+
+没有 Token 时，退回内置示例菜单（价格是示例值，**必须向用户声明**）：
+
+```bash
+python scripts/catering_planner.py --people 30 --budget 1200
 ```
 
 引擎会输出三档方案。**三档必须都给**——组织者往往要拿方案去向上申请，只给一个数字没法谈。
@@ -87,7 +98,10 @@ python scripts/catering_planner.py --people 50 --budget 1500 --occasion "部门�
 
 ## 参考文件
 
+- `scripts/fetch_menu.py` —— 从 MCP 拉真实菜单并转换为引擎格式（唯一联网脚本）
 - `scripts/catering_planner.py` —— 方案与预算引擎，纯本地计算，无网络依赖
-- `assets/sample_menu.json` —— 离线演示菜单
-- `examples/sample-output.md` —— 真实运行输出样例
-- `MCP_INTEGRATION.md` —— MCP 工具清单与调用流程详解
+- `assets/real_menu.json` —— 真实门店菜单快照（杭州东站某店，2026-10-23 拉取）
+- `assets/sample_menu.json` —— 离线演示菜单（价格为示例值）
+- `examples/real-output.md` —— 真实菜单跑出的方案样例
+- `examples/sample-output.md` —— 示例菜单跑出的方案样例
+- `MCP_INTEGRATION.md` —— MCP 工具清单、实测参数、调用流程详解

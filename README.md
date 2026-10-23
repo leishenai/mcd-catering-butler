@@ -51,6 +51,18 @@ python scripts/catering_planner.py --people 50 --budget 1500 --occasion "部门�
 
 50 人、1500 元、人均 28.5、含一堡一薯条一可乐、结余 75 元留给配送费。这是能直接报给财务的数字。
 
+### 换成真实门店数据同样跑得通
+
+上面的表用的是内置示例菜单。接上 MCP Token 后拉真实菜单（杭州东站某门店，11 个分类 79 个在售商品），30 人 1200 元的实跑结果：
+
+| 档位 | 总价 | 人均 | 结余 |
+|---|---:|---:|---:|
+| 控本档 | ¥949.50 | ¥31.65 | ¥70.50 |
+| 标准档 | ¥1156.00 | ¥38.53 | ¥44.00 |
+| 升级档 | ¥1328.50 | ¥44.28 | ¥51.50 |
+
+标准档明细：巨无霸 30 份 + 泷盐星星麦旋风 8 份 + 雪碧 18 杯 = **¥1156.00**。完整输出见 [examples/real-output.md](examples/real-output.md)。
+
 ---
 
 ## 快速开始
@@ -140,16 +152,19 @@ python scripts/catering_planner.py --people 50 --budget 1500
 mcd-catering-butler/
 ├── SKILL.md                     Skill 定义：触发条件、工作流、硬性约束、降级策略
 ├── README.md                    本文件
-├── MCP_INTEGRATION.md           MCP 工具清单、调用流程、业务价值
+├── MCP_INTEGRATION.md           MCP 工具清单、实测参数坑、调用流程
 ├── CONTEST_DECLARATION.md       参赛声明（官方原文，未改动）
 ├── mcp-config.example.json      脱敏 MCP 配置示例（仅环境变量占位符）
 ├── workbuddy.md                 WorkBuddy 开发过程记录
 ├── assets/
+│   ├── real_menu.json           真实门店菜单快照（杭州东站某店，11 分类 79 商品）
 │   └── sample_menu.json         离线示例菜单（价格为示例值）
 ├── scripts/
+│   ├── fetch_menu.py            从 MCP 拉真实菜单并转换（唯一联网脚本）
 │   └── catering_planner.py      方案与预算引擎，纯标准库，零依赖
 └── examples/
-    └── sample-output.md         真实运行输出样例
+    ├── real-output.md           真实菜单跑出的方案
+    └── sample-output.md         示例菜单跑出的方案
 ```
 
 ---
