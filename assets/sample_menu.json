@@ -1,0 +1,29 @@
+{
+  "_meta": {
+    "说明": "示例菜单数据，仅用于本地演示与单元测试。真实数据须经麦当劳 MCP 的 query-meals / list-nutrition-foods 实时拉取，价格与供应状态以门店为准。",
+    "currency": "CNY",
+    "source": "sample",
+    "note": "sku 字段为示意编码，真实编码由 query-meals 返回的餐品编码决定。"
+  },
+  "items": [
+    { "name": "巨无霸", "category": "main", "price": 25, "calories": 550, "tags": ["beef"], "sku": "SAMPLE-BIGMAC" },
+    { "name": "双层吉士汉堡", "category": "main", "price": 20, "calories": 440, "tags": ["beef"], "sku": "SAMPLE-DCHZ" },
+    { "name": "麦辣鸡腿堡", "category": "main", "price": 22, "calories": 500, "tags": ["chicken", "spicy", "fried"], "sku": "SAMPLE-SPICY" },
+    { "name": "板烧鸡腿堡", "category": "main", "price": 21, "calories": 400, "tags": ["chicken"], "sku": "SAMPLE-GRILL" },
+    { "name": "麦香鱼", "category": "main", "price": 18, "calories": 340, "tags": ["fish", "fried"], "sku": "SAMPLE-FISH" },
+    { "name": "麦乐鸡（5块）", "category": "side", "price": 14, "calories": 220, "tags": ["chicken", "fried"], "sku": "SAMPLE-NUG5" },
+
+    { "name": "中薯条", "category": "side", "price": 12, "calories": 340, "tags": ["fried", "vegetarian"], "sku": "SAMPLE-FRIES-M" },
+    { "name": "大薯条", "category": "side", "price": 15, "calories": 430, "tags": ["fried", "vegetarian"], "sku": "SAMPLE-FRIES-L" },
+    { "name": "麦乐鸡（10块）", "category": "side", "price": 25, "calories": 440, "tags": ["chicken", "fried"], "sku": "SAMPLE-NUG10" },
+    { "name": "那么大鸡排", "category": "side", "price": 15, "calories": 300, "tags": ["chicken", "fried", "spicy"], "sku": "SAMPLE-CHICKENSTEAK" },
+    { "name": "玉米杯", "category": "side", "price": 9, "calories": 100, "tags": ["vegetarian"], "sku": "SAMPLE-CORN" },
+    { "name": "苹果片", "category": "side", "price": 8, "calories": 35, "tags": ["vegetarian"], "sku": "SAMPLE-APPLE" },
+
+    { "name": "中杯可乐", "category": "drink", "price": 9, "calories": 150, "tags": ["vegetarian"], "sku": "SAMPLE-COLA-M" },
+    { "name": "大杯可乐", "category": "drink", "price": 11, "calories": 220, "tags": ["vegetarian"], "sku": "SAMPLE-COLA-L" },
+    { "name": "纯牛奶", "category": "drink", "price": 10, "calories": 150, "tags": ["vegetarian"], "sku": "SAMPLE-MILK" },
+    { "name": "橙汁", "category": "drink", "price": 12, "calories": 160, "tags": ["vegetarian"], "sku": "SAMPLE-OJ" },
+    { "name": "鲜煮咖啡", "category": "drink", "price": 13, "calories": 5, "tags": ["vegetarian"], "sku": "SAMPLE-COFFEE" }
+  ]
+}
