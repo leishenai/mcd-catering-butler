@@ -140,7 +140,7 @@ python scripts/catering_planner.py --people 50 --budget 1500
 | 门店与基础 | `now-time-info`、`query-nearby-stores`、`delivery-query-stores`、`delivery-query-addresses` |
 | 餐品与价格 | `query-meals`、`query-meal-detail`、`list-nutrition-foods`、`calculate-price` |
 | 优惠与账户 | `query-store-coupons`、`available-coupons`、`query-my-coupons`、`auto-bind-coupons` |
-| 团餐与活动 | `query-meal-assistance`、`query-party-city`、`query-party-store`、`query-partystore-date`、`query-partystore-session`、`party-order-create` |
+| 团餐与活动 | `query-meal-assistance`、`query-promotions`、`query-party-city`、`query-party-store`、`query-party-store-date`、`query-party-store-session`、`party-order-create` |
 
 调用顺序、顺序背后的原因、错误码处理，全部写在 [MCP_INTEGRATION.md](MCP_INTEGRATION.md)。
 
